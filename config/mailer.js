@@ -7,14 +7,22 @@ const nodemailer = require('nodemailer');
  */
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT) || 587,
-  secure: process.env.SMTP_SECURE === 'true', // true for port 465, false for other ports
+  port: Number(process.env.SMTP_PORT),
+  secure: process.env.SMTP_SECURE === "true",
+
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
-});
 
+  connectionTimeout: 30000,
+  greetingTimeout: 30000,
+  socketTimeout: 30000,
+
+  tls: {
+    rejectUnauthorized: false,
+  },
+});
 // Verify connection configuration on startup (non-blocking).
 // If SMTP credentials are missing/invalid, the app still runs —
 // emails will simply fail and be logged, which is fine for local testing.
